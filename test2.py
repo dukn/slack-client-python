@@ -1,3 +1,6 @@
+import sys
+import telnetlib
+################################################################
 import os
 import time
 from slackclient import SlackClient
@@ -7,6 +10,7 @@ import subprocess
 
 # starterbot's ID as an environment variable
 BOT_ID = 'U5VF5JWMC'
+PythonCode = False
 
 # constants
 AT_BOT = "<@" + BOT_ID + ">"
@@ -16,8 +20,32 @@ EXAMPLE_COMMAND = "do"
 # instantiate Slack & Twilio clients
 
 BOT_NAME = 'dcb'
-DCB_TOKEN = 'xoxb-199515642726-zebkXi9EsjLM3FMuY1SEXHZ6'
+DCB_TOKEN = 'xoxb-199515642726-HiE3kqtYy1q4eQYRqsDGB4u6'
 slack_client = SlackClient(DCB_TOKEN)
+
+
+
+# Initialize 
+HOST = 'localhost'
+PORT = '1210'
+tn=telnetlib.Telnet(HOST,PORT)
+
+
+def msgProcessing(msg):
+    #
+    if PythonCode:
+        # This is processing method 
+        rc = subprocess.call(msg,shell = True)
+        f = open('.tmpfile')
+        res = f.read()
+        print res 
+        # End of processing method
+        return res 
+    # Now, we return to socket by telnet
+    tn.write(msg+"\n")
+    res = tn.read_until("\n",timeout=3)
+    print res
+    return res
 
 
 def handle_command(command, channel):
@@ -31,13 +59,11 @@ def handle_command(command, channel):
     if command.startswith(EXAMPLE_COMMAND):
         response = ":: Sure...write some more code then I can do that!"
         newcmd = command.split(EXAMPLE_COMMAND)[1]
-        #print (newcmd)
+        # Print (newcmd)
         gk = "python -c 'print {}' > .tmpfile".format(newcmd)
-        #print gk
-        rc = subprocess.call(gk,shell = True)
-        f = open('.tmpfile')
-        res = f.read()
-        print res 
+        
+        res = msgProcessing(gk)
+        # Create a new format
         res = ":: {}".format(res)  
     slack_client.api_call("chat.postMessage", channel=channel,
                           text=res, as_user=True)
@@ -77,3 +103,4 @@ if __name__ == "__main__":
         print("Connection failed. Invalid Slack token or bot ID?")
 
 
+#########################################################################
