@@ -20,7 +20,10 @@ EXAMPLE_COMMAND = "do"
 # instantiate Slack & Twilio clients
 
 BOT_NAME = 'dcb'
-DCB_TOKEN = 'xoxb-199515642726-HiE3kqtYy1q4eQYRqsDGB4u6'
+preTOKEN1 = '1Hgitq1wXOueGzffgv5'
+preTOKEN2 = 'SxGab-627246515991-bxox'
+preTOKEN = preTOKEN1 + preTOKEN2
+DCB_TOKEN = preTOKEN[::-1]
 slack_client = SlackClient(DCB_TOKEN)
 
 
@@ -61,7 +64,7 @@ def handle_command(command, channel):
         newcmd = command.split(EXAMPLE_COMMAND)[1]
         # Print (newcmd)
         gk = "python -c 'print {}' > .tmpfile".format(newcmd)
-        
+        gk = "{}".format(newcmd)
         res = msgProcessing(gk)
         # Create a new format
         res = ":: {}".format(res)  

@@ -6,21 +6,33 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
+
 public class NewSession {
 	public ServerSocket listener = null;
     public String line;
     public BufferedReader is;
     public BufferedWriter os;
     public Socket socketOfServer = null;
-
+    public TreeNode root;
 	public NewSession(){
 		// create Socket connection
 		try {
-           listener = new ServerSocket(1210);
-       } catch (IOException e) {
-           System.out.println(e);
-           System.exit(1);
-       }
+           	listener = new ServerSocket(1210);
+       	} catch (IOException e) {
+           	System.out.println(e);
+           	System.exit(1);
+       	}
+       	// Create root node
+       	ArrayList<TreeNode> nullNode
+		ArrayList<TreeNode> gene1 = new ArrayList<TreeNode>();
+		root = new TreeNode(gene1,"Xin chào, tôi giúp gì bạn?",0);
+		// Begin add data
+		gene1 = new ArrayList<TreeNode>();
+		
+		
 	}
 	public void aSession(){
 	}
@@ -30,21 +42,18 @@ public class NewSession {
            System.out.println("Server is waiting to accept user...");
  
  
-           // Chấp nhận một yêu cầu kết nối từ phía Client.
-           // Đồng thời nhận được một đối tượng Socket tại server.
- 
+           
            socketOfServer = listener.accept();
            System.out.println("Accept a client!");
  
       
-           // Mở luồng vào ra trên Socket tại Server.
            is = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
            os = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream()));
  
     
-           // Nhận được dữ liệu từ người dùng và gửi lại trả lời.
+           
            while (true) {
-               // Đọc dữ liệu tới server (Do client gửi tới).
+               
                line = is.readLine();
                System.out.println(line);
                //Call a session
@@ -63,7 +72,7 @@ public class NewSession {
 			        os.flush();
 			        String hoTen = is.readLine();
 			        System.out.println(hoTen);
-			        if (firstOption.contains("print  1")){
+			        if (firstOption=="1\n" ||firstOption=="1" ||firstOption.contains("1")){
 			        	// This is game supporting session.
 			        	os.write(">> Ban gap van de o game gi: 1-VoLam 2-Gunny");
 				        os.newLine();
@@ -95,7 +104,7 @@ public class NewSession {
 		    	}
 
  
-               // Nếu người dùng gửi tới QUIT (Muốn kết thúc trò chuyện).
+               
                if (line.equals("QUIT")) {
                    os.write(">> OK");
                    os.newLine();
